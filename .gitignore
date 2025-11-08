@@ -1,0 +1,40 @@
+# Credentials - NEVER commit these
+keys/*.json
+
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Logs
+logs/
+*.log
+
+# MLflow
+mlruns/
+
+# Artifacts
+artifacts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
