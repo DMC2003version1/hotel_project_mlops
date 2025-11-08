@@ -28,9 +28,6 @@ logs/
 # MLflow
 mlruns/
 
-# Artifacts
-artifacts/
-
 # IDE
 .vscode/
 .idea/
