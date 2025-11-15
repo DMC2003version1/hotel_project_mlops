@@ -10,3 +10,4 @@ imbalanced-learn
 lightgbm
 scipy
 mlflow
+flask

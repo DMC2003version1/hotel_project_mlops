@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-text {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏨 Hotel Booking Prediction</h1>
+        <p class="info-text">Nhập thông tin đặt phòng để dự đoán khả năng hủy đặt phòng</p>
+        
+        <form action="/predict" method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="no_of_adults">Số người lớn:</label>
+                    <input type="number" id="no_of_adults" name="no_of_adults" min="0" max="10" value="2" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="no_of_children">Số trẻ em:</label>
+                    <input type="number" id="no_of_children" name="no_of_children" min="0" max="10" value="0" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="no_of_weekend_nights">Số đêm cuối tuần:</label>
+                    <input type="number" id="no_of_weekend_nights" name="no_of_weekend_nights" min="0" max="10" value="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="no_of_week_nights">Số đêm trong tuần:</label>
+                    <input type="number" id="no_of_week_nights" name="no_of_week_nights" min="0" max="20" value="2" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lead_time">Thời gian đặt trước (ngày):</label>
+                <input type="number" id="lead_time" name="lead_time" min="0" max="500" value="30" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="arrival_year">Năm đến:</label>
+                    <input type="number" id="arrival_year" name="arrival_year" min="2017" max="2025" value="2024" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="arrival_month">Tháng đến:</label>
+                    <input type="number" id="arrival_month" name="arrival_month" min="1" max="12" value="6" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="arrival_date">Ngày đến:</label>
+                <input type="number" id="arrival_date" name="arrival_date" min="1" max="31" value="15" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="avg_price_per_room">Giá phòng trung bình:</label>
+                <input type="number" id="avg_price_per_room" name="avg_price_per_room" min="0" step="0.01" value="100" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="no_of_special_requests">Số yêu cầu đặc biệt:</label>
+                <input type="number" id="no_of_special_requests" name="no_of_special_requests" min="0" max="5" value="0" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="type_of_meal_plan">Loại bữa ăn:</label>
+                    <select id="type_of_meal_plan" name="type_of_meal_plan" required>
+                        <option value="0">Not Selected</option>
+                        <option value="1">Meal Plan 1</option>
+                        <option value="2">Meal Plan 2</option>
+                        <option value="3">Meal Plan 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="room_type_reserved">Loại phòng:</label>
+                    <select id="room_type_reserved" name="room_type_reserved" required>
+                        <option value="0">Room_Type 1</option>
+                        <option value="1">Room_Type 2</option>
+                        <option value="2">Room_Type 3</option>
+                        <option value="3">Room_Type 4</option>
+                        <option value="4">Room_Type 5</option>
+                        <option value="5">Room_Type 6</option>
+                        <option value="6">Room_Type 7</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="market_segment_type">Loại phân khúc thị trường:</label>
+                    <select id="market_segment_type" name="market_segment_type" required>
+                        <option value="0">Online</option>
+                        <option value="1">Offline</option>
+                        <option value="2">Corporate</option>
+                        <option value="3">Complementary</option>
+                        <option value="4">Aviation</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="required_car_parking_space">Cần chỗ đỗ xe:</label>
+                    <select id="required_car_parking_space" name="required_car_parking_space" required>
+                        <option value="0">Không</option>
+                        <option value="1">Có</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="repeated_guest">Khách quen:</label>
+                    <select id="repeated_guest" name="repeated_guest" required>
+                        <option value="0">Không</option>
+                        <option value="1">Có</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="no_of_previous_cancellations">Số lần hủy trước:</label>
+                    <input type="number" id="no_of_previous_cancellations" name="no_of_previous_cancellations" min="0" max="20" value="0" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="no_of_previous_bookings_not_canceled">Số đặt phòng không hủy trước:</label>
+                <input type="number" id="no_of_previous_bookings_not_canceled" name="no_of_previous_bookings_not_canceled" min="0" max="50" value="0" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Dự đoán</button>
+        </form>
+    </div>
+</body>
+</html>
+

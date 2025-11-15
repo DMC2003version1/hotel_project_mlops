@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        .result-box {
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .result-canceled {
+            background: #fee;
+            border: 2px solid #f44;
+        }
+        
+        .result-not-canceled {
+            background: #efe;
+            border: 2px solid #4f4;
+        }
+        
+        .prediction {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .prediction.canceled {
+            color: #d00;
+        }
+        
+        .prediction.not-canceled {
+            color: #0a0;
+        }
+        
+        .confidence {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .proba-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .proba-item {
+            padding: 15px;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+        
+        .proba-item h3 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .proba-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .proba-canceled .value {
+            color: #d00;
+        }
+        
+        .proba-not-canceled .value {
+            color: #0a0;
+        }
+        
+        .error {
+            color: #d00;
+            padding: 20px;
+            background: #fee;
+            border-radius: 8px;
+            border: 2px solid #f44;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Kết quả dự đoán</h1>
+        
+        {% if error %}
+            <div class="error">
+                <p>{{ error }}</p>
+            </div>
+        {% else %}
+            <div class="result-box {% if prediction == 'Canceled' %}result-canceled{% else %}result-not-canceled{% endif %}">
+                <div class="prediction {% if prediction == 'Canceled' %}canceled{% else %}not-canceled{% endif %}">
+                    {{ prediction }}
+                </div>
+                <div class="confidence">
+                    Độ tin cậy: {{ confidence }}%
+                </div>
+                
+                <div class="proba-details">
+                    <div class="proba-item proba-not-canceled">
+                        <h3>Không hủy</h3>
+                        <div class="value">{{ proba_not_canceled }}%</div>
+                    </div>
+                    <div class="proba-item proba-canceled">
+                        <h3>Hủy</h3>
+                        <div class="value">{{ proba_canceled }}%</div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        <a href="/" class="back-btn">Thử lại</a>
+    </div>
+</body>
+</html>
+
