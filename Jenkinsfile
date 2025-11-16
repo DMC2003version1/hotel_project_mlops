@@ -1,16 +1,10 @@
 pipeline  {
-    agent {
-        docker {
-            image 'google/cloud-sdk:slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
-
+    agent any
 
     environment {
         VENV_DIR = 'venv'
         GCP_PROJECT = "sodium-ray-476215-f3"
-        GCLOUD_PATH = "var/jenkins_home/google-cloud-sdk/bin"
+        GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
     }
 
     stages{
