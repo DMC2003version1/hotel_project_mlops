@@ -36,7 +36,6 @@ pipeline  {
             steps{
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
                     script{
-                        def gcloud = tool 'gcloud-sdk'
                         echo "Building pushing Docker Image to Google Cloud Registry"
                         sh """
                             export PATH=${GCLOUD_PATH}:${PATH}
