@@ -5,6 +5,7 @@ pipeline  {
         VENV_DIR = 'venv'
         GCP_PROJECT = "sodium-ray-476215-f3"
         GCLOUD_PATH = "/usr/lib/google-cloud-sdk/bin"
+        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-key')
     }
 
     stages{
