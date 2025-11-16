@@ -4,7 +4,7 @@ pipeline  {
     environment {
         VENV_DIR = 'venv'
         GCP_PROJECT = "sodium-ray-476215-f3"
-        GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
+        GCLOUD_PATH = "/root/google-cloud-sdk/bin"
     }
 
     stages{
