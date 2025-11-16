@@ -3,6 +3,8 @@ pipeline  {
 
     environment {
         VENV_DIR = 'venv'
+        GCP_PROJECT = "sodium-ray-476215-f3"
+        GCLOUD_PATH = "var/jenkins_home/google-cloud-sdk/bin"
     }
 
     stages{
@@ -27,6 +29,30 @@ pipeline  {
                         pip install -e .
                     """
                 }
+            }
+        }
+
+        stage("Building pushing Docker Image to Google Cloud Registry") {
+            steps{
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
+                    script{
+                        echo "Building pushing Docker Image to Google Cloud Registry"
+                        sh """
+                            export PATH=${GCLOUD_PATH}:${PATH}
+
+                            gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+
+                            gcloud config set project ${GCP_PROJECT}
+
+                            gcloud auth configure-docker --quiet
+
+                            docker build -t gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest .
+
+                            docker push gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest
+                        """
+                    }
+                }
+
             }
         }
     }
