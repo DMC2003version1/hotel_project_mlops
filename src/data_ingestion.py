@@ -26,7 +26,7 @@ class DataIngestion:
         
     def download_csv_from_gcp(self):
         try:
-            credentials_path = os.getenv("GCLOUD_KEY")
+            credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
             client = storage.Client.from_service_account_json(credentials_path)
             bucket = client.bucket(self.bucket_name)
             blob = bucket.blob(self.bucket_file_name)
