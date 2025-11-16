@@ -1,5 +1,11 @@
 pipeline  {
-    agent any
+    agent {
+        docker {
+            image 'google/cloud-sdk:slim'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
 
     environment {
         VENV_DIR = 'venv'
