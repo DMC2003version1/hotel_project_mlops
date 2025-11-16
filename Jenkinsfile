@@ -4,7 +4,7 @@ pipeline  {
     environment {
         VENV_DIR = 'venv'
         GCP_PROJECT = "sodium-ray-476215-f3"
-        GCLOUD_PATH = "/root/google-cloud-sdk/bin"
+        GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
     }
 
     stages{
@@ -36,6 +36,7 @@ pipeline  {
             steps{
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
                     script{
+                        def gcloud = tool 'gcloud-sdk'
                         echo "Building pushing Docker Image to Google Cloud Registry"
                         sh """
                             export PATH=${GCLOUD_PATH}:${PATH}
