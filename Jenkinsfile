@@ -32,19 +32,19 @@ pipeline  {
             }
         }
 
-        stage("Building pushing Docker Image to Google Cloud Registry") {
+        stage("Building & Pushing Docker Image to Google Cloud Registry") {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     script {
-                        echo "Building pushing Docker Image to Google Cloud Registry"
+                        echo "Building & Pushing Docker Image to GCR"
                         sh '''
                             # ====== Export credentials ======
                             export GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS"
 
-                            # ====== Use gcloud from /usr/local/bin (Jenkins user can access) ======
-                            export PATH="/usr/local/bin:$PATH"
+                            # ====== Ensure gcloud and docker-credential-gcloud in PATH ======
+                            export PATH="/usr/lib/google-cloud-sdk/bin:$PATH"
 
-                            # ====== Confirm gcloud exists ======
+                            # ====== Check gcloud ======
                             echo "Using gcloud at: $(which gcloud)"
                             gcloud --version
 
@@ -53,7 +53,7 @@ pipeline  {
                             gcloud config set project "${GCP_PROJECT}"
                             gcloud auth configure-docker --quiet
 
-                            # ====== Build & Push image ======
+                            # ====== Build & Push Docker Image ======
                             docker build -t gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest .
                             docker push gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest
                         '''
@@ -61,6 +61,7 @@ pipeline  {
                 }
             }
         }
+
 
         stage("Run Training Inside Container") {
             steps {
