@@ -10,8 +10,24 @@ exit
 
 
 
-apt-get install -y bash
-curl https://sdk.cloud.google.com | bash
-source ~/.bashrc
+# apt-get install -y bash
+# curl https://sdk.cloud.google.com | bash
+# source ~/.bashrc
 
-ln -s /root/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
+# ln -s /root/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
+
+
+docker exec -it -u root f19178f516e9 bash
+
+# Tải và giải nén gcloud vào thư mục chung
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-548.0.0-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-548.0.0-linux-x86_64.tar.gz
+mv google-cloud-sdk /usr/local/google-cloud-sdk
+
+# Cho mọi user execute
+chmod -R 755 /usr/local/google-cloud-sdk
+
+# Link ra PATH chung
+ln -s /usr/local/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
+ln -s /usr/local/google-cloud-sdk/bin/gsutil /usr/local/bin/gsutil
+

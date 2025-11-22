@@ -54,8 +54,8 @@ pipeline  {
                             gcloud auth configure-docker --quiet
 
                             # ====== Build & Push image ======
-                            docker build -t gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest .
-                            docker push gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest
+                            sudo docker build -t gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest .
+                            sudo docker push gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest
                         '''
                     }
                 }
