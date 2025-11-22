@@ -41,8 +41,8 @@ pipeline  {
                             # ====== Export credentials ======
                             export GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS"
 
-                            # ====== Add gcloud to PATH ======
-                            export PATH="/root/google-cloud-sdk/bin:$PATH"
+                            # ====== Use gcloud from /usr/local/bin (Jenkins user can access) ======
+                            export PATH="/usr/local/bin:$PATH"
 
                             # ====== Confirm gcloud exists ======
                             echo "Using gcloud at: $(which gcloud)"
@@ -50,7 +50,7 @@ pipeline  {
 
                             # ====== Authenticate ======
                             gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
-                            gcloud config set project '"${GCP_PROJECT}"'
+                            gcloud config set project "${GCP_PROJECT}"
                             gcloud auth configure-docker --quiet
 
                             # ====== Build & Push image ======
@@ -61,8 +61,6 @@ pipeline  {
                 }
             }
         }
-
-
 
         stage("Run Training Inside Container") {
             steps {

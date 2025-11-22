@@ -13,3 +13,5 @@ exit
 apt-get install -y bash
 curl https://sdk.cloud.google.com | bash
 source ~/.bashrc
+
+ln -s /root/google-cloud-sdk/bin/gcloud /usr/local/bin/gcloud
