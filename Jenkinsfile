@@ -33,28 +33,48 @@ pipeline  {
         }
 
         stage("Building pushing Docker Image to Google Cloud Registry") {
-            steps{
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
-                    script{
+            steps {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    script {
                         echo "Building pushing Docker Image to Google Cloud Registry"
-                        sh """
-                            export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
-                            
-                            export PATH=${GCLOUD_PATH}:${PATH}
+                        sh '''
+                            # ====== Export credentials ======
+                            export GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS"
 
-                            gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                            # ====== Add gcloud to PATH ======
+                            export PATH="/root/google-cloud-sdk/bin:$PATH"
 
-                            gcloud config set project ${GCP_PROJECT}
+                            # ====== Confirm gcloud exists ======
+                            echo "Using gcloud at: $(which gcloud)"
+                            gcloud --version
 
+                            # ====== Authenticate ======
+                            gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS"
+                            gcloud config set project '"${GCP_PROJECT}"'
                             gcloud auth configure-docker --quiet
 
+                            # ====== Build & Push image ======
                             docker build -t gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest .
-
                             docker push gcr.io/${GCP_PROJECT}/hotel-project-mlops:latest
-                        """
+                        '''
                     }
                 }
+            }
+        }
 
+
+
+        stage("Run Training Inside Container") {
+            steps {
+                withCredentials([file(credentialsId: 'gcp-key', variable: 'GCP_KEY')]) {
+                    sh """
+                        docker run \
+                            -e GOOGLE_APPLICATION_CREDENTIALS=/key.json \
+                            -v $GCP_KEY:/key.json \
+                            ${IMAGE_NAME} \
+                            python pipeline/training_pipeline.py
+                    """
+                }
             }
         }
     }
